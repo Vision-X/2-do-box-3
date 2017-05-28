@@ -17,7 +17,7 @@ function ideasFromLocal() {
 
 ideasFromLocal();
 
-//clearing in put fields //
+//clearing input fields //
 
 function clearInput() {
   ideaTitleInput.val('');
