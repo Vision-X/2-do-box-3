@@ -2,6 +2,8 @@ var ideaTitleInput = $('.title-input');
 var ideaBodyInput = $('.body-input');
 var ideaArray = [];
 
+//Storing and Pulling from Local storage ?? hmmm //
+
 function ideasFromLocal() {
   var keys = Object.keys(localStorage);
   var keyLength = keys.length;
@@ -15,10 +17,14 @@ function ideasFromLocal() {
 
 ideasFromLocal();
 
+//clearing in put fields //
+
 function clearInput() {
   ideaTitleInput.val('');
   ideaBodyInput.val('');
 }
+
+//Card object instance//
 
 function constructNewIdea(title, body) {
   this.title = title;
@@ -26,6 +32,8 @@ function constructNewIdea(title, body) {
   this.id = Date.now();
   this.quality = 'Swill';
 }
+
+//HMTL injection //
 
 function prependIdeaCard(newIdeaCard) {
   $('.bottom-section').prepend(`<section
@@ -48,9 +56,13 @@ function prependIdeaCard(newIdeaCard) {
   clearInput();
 }
 
+//Set card object to local storage //
+
 function storeIdeaCard(newIdeaCard) {
   localStorage.setItem(newIdeaCard.id, JSON.stringify(newIdeaCard));
 }
+
+// Save button e.listener + Construct card + Inject + local store //
 
 $('.save-button').on('click', function(event) {
     event.preventDefault();
@@ -62,11 +74,15 @@ $('.save-button').on('click', function(event) {
   storeIdeaCard(newIdeaCard);
 });
 
+// delete button functionality ... //
+
 $('.bottom-section').on('click','button.delete-button', function() {
   var id = $(this).closest('.idea-card').prop('id');
   localStorage.removeItem(id);
   $(this).parents('.idea-card').remove();
 });
+
+// Making card heading editable //
 
 $('.bottom-section').on('keyup focusout','.idea-card-header',function() {
   var id = $(this).closest('.idea-card').prop('id');
@@ -74,6 +90,8 @@ $('.bottom-section').on('keyup focusout','.idea-card-header',function() {
   parseIdea.title = $(this).text();
   localStorage.setItem(id, JSON.stringify(parseIdea));
 })
+
+// Handles 'Enter' button for editing heading on card //
 
 $('.bottom-section').on('keypress','.idea-card-header',function(event) {
   if (event.which == 13) {
@@ -85,12 +103,16 @@ $('.bottom-section').on('keypress','.idea-card-header',function(event) {
   }
 })
 
+// Making the article element editable //
+
 $('.bottom-section').on('keyup focusout','.article-text-container',function() {
   var id = $(this).closest('.idea-card').prop('id');
   var parseIdea = JSON.parse(localStorage.getItem(id));
   parseIdea.body = $(this).text();
   localStorage.setItem(id, JSON.stringify(parseIdea));
 })
+
+// Handles 'Enter' key for editing article on card //
 
 $('.bottom-section').on('keydown','.article-text-container',function(event) {
   if (event.which == 13) {
@@ -101,6 +123,8 @@ $('.bottom-section').on('keydown','.article-text-container',function(event) {
     localStorage.setItem(id, JSON.stringify(parseIdea));
   }
 })
+
+// Quality changing on upvote (isnt updating localstoarage currently)//
 
 $('.bottom-section').on('click', 'button.upvote-button', function() {
   var id = $(this).closest('.idea-card').prop('id');
@@ -114,6 +138,8 @@ $('.bottom-section').on('click', 'button.upvote-button', function() {
   localStorage.setItem(id, JSON.stringify(parseIdea));
 })
 
+// quality changing on Downvote (inst updating localstorage )//
+
 $('.bottom-section').on('click', 'button.downvote-button', function() {
   var id = $(this).closest('.idea-card').prop('id');
   var parseIdea = JSON.parse(localStorage.getItem(id));
@@ -125,6 +151,8 @@ $('.bottom-section').on('click', 'button.downvote-button', function() {
   parseIdea.quality = $(this).siblings('p').children().text();
   localStorage.setItem(id, JSON.stringify(parseIdea));
 })
+
+// Search functionality through localstorage (only works after page refresh for now) //
 
 $('.search-box').on('input', function() {
   var searchResult = $(this).val().toUpperCase();
